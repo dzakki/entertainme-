@@ -6,6 +6,7 @@ const tag = require('./schemas/tag')
 
 const typeDefs = `
     type Query
+    type Mutation
 `
 const schema = makeExecutableSchema({
     typeDefs: [typeDefs, movie.typeDefs, tvSeries.typeDefs, tag],
