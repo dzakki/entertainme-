@@ -4,6 +4,7 @@ import Movies from '../screens/Movies';
 import CustomHeader from '../components/CustomHeader';
 import AddMovies from '../screens/AddMovies';
 import DetailMovies from '../screens/DetailMovies';
+import UpdateMovies from '../screens/UpdateMovies';
 
 const Stack = createStackNavigator()
 
@@ -34,7 +35,15 @@ export default function MoviesNavigation() {
                 name="detailMovies"
                 component={DetailMovies}
                 options={{
-                    title: "Detail a movies",
+                    title: "Detail a movie",
+                    header: CustomHeader
+                }}
+            />
+            <Stack.Screen
+                name="updateMovies"
+                component={UpdateMovies}
+                options={{
+                    title: "Update a movie",
                     header: CustomHeader
                 }}
             />

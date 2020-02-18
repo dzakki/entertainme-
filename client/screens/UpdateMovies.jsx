@@ -1,36 +1,67 @@
 import React, { useState } from 'react';
+import { gql } from 'apollo-boost';
 import { useMutation } from '@apollo/react-hooks';
+import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
-import { ADD_MOVIE, GET_MOVIES } from '../store/queries/moviesQueries';
 import FormMovies from '../components/FormMovies';
 
-export default function AddMovies() {
 
-    const [addMovie, { loading }]  = useMutation(ADD_MOVIE);
+const UPDATE_MOVIE  = gql`
+    mutation updateMovie($input: inputUpdateMovie!, $id: String) {
+        updateMovie (input: $input, id: $id) {
+            _id,
+            title
+            overview
+            popularity
+            poster_path
+            tags {
+              name
+            }
+        }
+    }
+`
 
+const GET_MOVIES = gql`
+
+    query {
+        movies {
+            _id,
+            title
+            overview
+            popularity
+            poster_path
+            tags {
+              name
+            }
+        }
+    }
+
+`
+
+export default function UpdateMovies (props) {
+    const { dataMovie } = props.route.params
     const [formData, setFormData] = useState({
-        title: "", 
-        overview: "", 
-        poster_path: "", 
-        popularity: "", 
-        tags: ["5e45144184f936fed373d1ec"]
+        ...dataMovie,
+        popularity: String(dataMovie.popularity),
     })
+    const [updateMovie, { loading }]  = useMutation(UPDATE_MOVIE);
+    const navigation = useNavigation()
+
     const submitForm = () => {
         const form = {
-            ...formData,
+            title: formData.title, 
+            overview: formData.overview, 
+            poster_path: formData.poster_path,
+            popularity: Number(formData.popularity),
+            tags: ["5e45144184f936fed373d1ec"],
             popularity: Number(formData.popularity)
         }
-        
-        console.log(form)
-        addMovie({
-            variables: form,
-            update : (cache , { data }) => {
-                const  cacheData = cache.readQuery({ query: GET_MOVIES })
-                cache.writeQuery({
-                    query: GET_MOVIES,
-                    data: { movies: cacheData.movies.concat([data.addMovie]) },
-                });
-            }
+        updateMovie({
+            variables: {
+                input : form,
+                id: dataMovie._id
+            },
+            refetchQueries: [{ query: GET_MOVIES }],
         })
         .then(() => {
             setFormData({
@@ -40,14 +71,15 @@ export default function AddMovies() {
                 popularity: "", 
                 tags: ["5e45144184f936fed373d1ec"]
             })
-            alert('Added a movie')
+            alert('upated a movie')
+            navigation.navigate('detailMovies', formData)
         })
         .catch(err => {
             console.log(err)
             alert('error')
-        })
-
+        })   
     }
+
 
     return (
         <View style={styles.container}>
@@ -69,6 +101,7 @@ export default function AddMovies() {
     )
 }
 
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -78,7 +111,7 @@ const styles = StyleSheet.create({
     wrapForm: {
         width: '100%',
         padding: 8,
-        flex: 1
+        flex: 1,
     },
     form: {
         flex: 1,

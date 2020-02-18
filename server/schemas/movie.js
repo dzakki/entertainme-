@@ -13,7 +13,7 @@ const typeDefs = `
 
     extend type Mutation {
         addMovie (title: String, overview: String, poster_path: String, popularity: Float, tags: [String]): Movie
-        updateMovie (input: inputUpdateMovie, id: String): Movie
+        updateMovie (input: inputUpdateMovie!, id: String): Movie
         deleteMovie (id: String): message
     }
 

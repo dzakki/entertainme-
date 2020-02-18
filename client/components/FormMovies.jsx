@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { Content, Form, Item, Input, Label,  Button, Text} from 'native-base';
+import { useNavigation } from '@react-navigation/native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { Content, Form, Item, Input, Label,  Button, Text, Icon} from 'native-base';
 
 export default function FormMovies({ data, onChangeForm, submitForm }) {
+    const navigation = useNavigation()
 
     const handleInputChange = (key, value) => {
         const newDataFormTemp = {}
@@ -29,8 +32,14 @@ export default function FormMovies({ data, onChangeForm, submitForm }) {
     }
 
     return (
-        <Content>
-            <Form padder>
+        <Content style={{
+            flex: 1,
+            flexDirection: 'column'
+        }}>
+            <Form padder style={{
+                flex: 1,
+                height: 600,
+            }}>
                 <Item floatingLabel>
                 <Label>Title</Label>
                     <Input
@@ -48,37 +57,69 @@ export default function FormMovies({ data, onChangeForm, submitForm }) {
                 <Item floatingLabel>
                 <Label>Overview</Label>
                     <Input
-                        data={data.overview}
+                        value={data.overview}
                         onChangeText={ (val) => handleInputChange('overview', val) }
+                        multiline={true}
                     />
                 </Item>
                 <Item floatingLabel>
                 <Label>URL Poster</Label>
                     <Input
-                        data={data.poster_path}
+                        value={data.poster_path}
                         onChangeText={ (val) => handleInputChange('poster_path', val) }
+                        multiline={true}
                     />
                 </Item>
-                <Button 
-                    dark
-                    style={{
-                        marginTop: 20,
-                        marginLeft: 10,
-                        width: 100,
-                        justifyContent: 'center',
-                        borderRadius: 10
-                    }}
+            </Form>
+
+            <View style={{
+                alignSelf: 'flex-end',
+                marginTop: 10,
+                bottom: 10,
+                right: 10,
+                flex: 1,
+                flexDirection: 'row',
+            }}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <View style={styles.btnMenu}>
+                    <Icon name="md-close" color="black" fontSize={29} />
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity  
                     onPressIn={() => {
                         const validate = validateForm()
                         if (!validate) {
                             submitForm()   
+                            return;
                         }
-                        alert(validate.join(', '))
+                        alert(validate?.join(', '))
                     }}
                 >
-                    <Text> Save </Text>
-                </Button>
-            </Form>
+                    <View style={styles.btnMenu}>
+                    <Icon name="md-checkmark" color="black" fontSize={29} />
+                    </View>
+                </TouchableOpacity>
+            </View>
         </Content>
     )
 }
+
+const styles = StyleSheet.create({
+    btnMenu: {
+        marginLeft: 10,
+        backgroundColor: 'white',
+        width: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 50,
+        borderRadius: 50,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.20,
+        shadowRadius: 1.41,
+        elevation: 2,
+    }
+})

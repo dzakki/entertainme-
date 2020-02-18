@@ -1,5 +1,4 @@
 import React from 'react';
-import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 import { 
     StyleSheet, 
@@ -11,25 +10,13 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import { GET_MOVIES } from '../store/queries/moviesQueries';
 import ListCard from '../components/ListCard'
 
-const GET_MOVIES = gql`
-    query {
-        movies {
-            _id
-            title
-            overview
-            popularity
-            poster_path
-            tags {
-              name
-            }
-        }
-    }
-`
 
 export default function Movies() {
     const { loading, error, data } = useQuery(GET_MOVIES);
+    console.log(data?.movies.length, 'MOVIES')
     const navigation = useNavigation()
 
     if (loading) return <Text>Loading...</Text>;

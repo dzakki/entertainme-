@@ -19,7 +19,7 @@ export default function App() {
   }, [])
 
   return (
-    <ApolloProvider client={apolloClient}>
+    <ApolloProvider client={apolloClient} addTypename={false}>
       <NavigationContainer>
         <StatusBar backgroundColor="black" barStyle="dark-content" />
         <View style={{ marginTop: Constants.statusBarHeight }} />
