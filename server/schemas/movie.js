@@ -59,16 +59,19 @@ const resolver = {
       }
     },
     movie: async (parent, args) => {
+      console.log(args);
       try {
-        let todo = await redis.hget("movies", args.id);
-        if (todo) {
-          return todo;
+        let movieData = await redis.hget("movies", args.id);
+        console.log(movieData);
+        if (movieData) {
+          return JSON.parse(movieData);
         }
         const { data } = await axios.get(`${apiUrl}/movies/${args.id}`);
         redis.hset("movies", args.id, JSON.stringify(data));
         redis.expire("movies", 3600);
         return data;
       } catch (error) {
+        console.log("eror");
         new ApolloError("failed get a movie", "GET_MOVIE");
       }
     }

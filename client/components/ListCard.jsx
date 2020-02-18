@@ -2,11 +2,11 @@ import React from 'react';
 import { StyleSheet, View, Text, Image, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-export default function ListCard({data}) {
+export default function ListCard({data, url}) {
     const navigation = useNavigation()
     return (
         <TouchableWithoutFeedback 
-            onPress={ () => navigation.navigate('detailMovies', data) }
+            onPress={ () => navigation.navigate(url, data) }
         >
             <View style={styles.container}>
                 <View style={styles.deepContainer}>

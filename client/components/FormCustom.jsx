@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { Content, Form, Item, Input, Label,  Button, Text, Icon} from 'native-base';
+import { Content, Form, Item, Input, Label, Picker, Icon} from 'native-base';
 
-export default function FormMovies({ data, onChangeForm, submitForm }) {
+export default function FormCustom({ data, onChangeForm, submitForm }) {
     const navigation = useNavigation()
-
+    console.log(data, 'form')
     const handleInputChange = (key, value) => {
         const newDataFormTemp = {}
         newDataFormTemp[key] = value
@@ -69,6 +69,28 @@ export default function FormMovies({ data, onChangeForm, submitForm }) {
                         onChangeText={ (val) => handleInputChange('poster_path', val) }
                         multiline={true}
                     />
+                </Item>
+                <Item  picker style={{
+                    width: '95%',
+                    marginTop: 20,
+                    alignSelf: 'center'
+                }}>
+                    <Label>Tag</Label>
+                    <Picker
+                        mode="dropdown"
+                        style={{ width: undefined }}
+                        placeholder="Select your SIM"
+                        placeholderStyle={{ color: "#bfc6ea" }}
+                        placeholderIconColor="#007aff"
+                        selectedValue={data.tags[0]}
+                        onValueChange={(val) => handleInputChange('tags', [val])}
+                    >
+                        <Picker.Item label="Romance" value="5e45144184f936fed373d1ec" />
+                        <Picker.Item label="Horror" value="5e4bc4ac19262e3e259fc678" />
+                        <Picker.Item label="Action" value="5e4bc4b219262e3e259fc679" />
+                        <Picker.Item label="Comedy" value="5e4bc4e019262e3e259fc67a" />
+                        <Picker.Item label="Epic" value="5e4bc4fa19262e3e259fc67c" />
+                    </Picker>
                 </Item>
             </Form>
 

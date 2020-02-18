@@ -8,7 +8,24 @@ export const GET_MOVIES = gql`
             popularity
             poster_path
             tags {
+              _id
               name
+            }
+        }
+    }
+`
+
+export const GET_MOVIE = gql`
+    query getMovie ($id: String) {
+        movie (id: $id) {
+            _id
+            title
+            overview
+            popularity
+            poster_path
+            tags {
+                _id
+                name
             }
         }
     }
@@ -23,6 +40,7 @@ export const ADD_MOVIE  = gql`
             popularity
             poster_path
             tags {
+              _id
               name
             }
         }
@@ -38,6 +56,7 @@ mutation updateMovie($input: inputUpdateMovie!, $id: String) {
         popularity
         poster_path
         tags {
+          _id
           name
         }
     }

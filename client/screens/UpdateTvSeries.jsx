@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
-import { UPDATE_MOVIE, GET_MOVIES } from '../store/queries/moviesQueries';
+import { UPDATE_TVSERIES, GET_ALL_TVSERIES } from '../store/queries/tvSeriesQueries';
 import FormCustom from '../components/FormCustom';
 
 export default function UpdateMovies (props) {
-    const { dataMovie } = props.route.params
+    const { dataTvSeries } = props.route.params
     const [formData, setFormData] = useState({
-        ...dataMovie,
-        tags: [dataMovie.tags[0]._id],
-        popularity: String(dataMovie.popularity),
+        ...dataTvSeries,
+        tags: [dataTvSeries.tags[0]._id],
+        popularity: String(dataTvSeries.popularity),
     })
-    const [updateMovie, { loading }]  = useMutation(UPDATE_MOVIE);
+    const [updateTvSeries, { loading }]  = useMutation(UPDATE_TVSERIES);
     const navigation = useNavigation()
 
     const submitForm = () => {
@@ -24,12 +24,12 @@ export default function UpdateMovies (props) {
             tags: formData.tags,
             popularity: Number(formData.popularity)
         }
-        updateMovie({
+        updateTvSeries({
             variables: {
                 input : form,
-                id: dataMovie._id
+                id: dataTvSeries._id
             },
-            refetchQueries: [{ query: GET_MOVIES }],
+            refetchQueries: [{ query: GET_ALL_TVSERIES }],
         })
         .then(() => {
             setFormData({
@@ -39,8 +39,8 @@ export default function UpdateMovies (props) {
                 popularity: "", 
                 tags: ["5e45144184f936fed373d1ec"]
             })
-            alert('upated a movie')
-            navigation.navigate('detailMovies', formData)
+            alert('upated a tv series')
+            navigation.navigate('detailTvSeries', formData)
         })
         .catch(err => {
             console.log(err)

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import { ADD_MOVIE, GET_MOVIES } from '../store/queries/moviesQueries';
-import FormMovies from '../components/FormMovies';
+import FormCustom from '../components/FormCustom';
 
 export default function AddMovies() {
 
@@ -53,7 +53,7 @@ export default function AddMovies() {
         <View style={styles.container}>
             <View style={styles.wrapForm}>
                 <View style={styles.form}>
-                    <FormMovies 
+                    <FormCustom 
                         data={formData} 
                         onChangeForm={(data) => setFormData(data)} 
                         submitForm={submitForm}

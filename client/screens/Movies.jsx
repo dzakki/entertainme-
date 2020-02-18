@@ -28,7 +28,7 @@ export default function Movies() {
                 <FlatList
                     numColumns={2}
                     data={data.movies}
-                    renderItem={({item}) => <ListCard data={item} />}
+                    renderItem={({item}) => <ListCard data={item} url="detailMovies" />}
                 />
             </ScrollView>
             <View style={styles.floatingMenuButton}>

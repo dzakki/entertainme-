@@ -11,37 +11,37 @@ import {
 import { Badge, Text } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { DELETE_MOVIE, GET_MOVIES, GET_MOVIE } from '../store/queries/moviesQueries';
+import { DELETE_TVSERIES, GET_ALL_TVSERIES, GET_TVSERIES } from '../store/queries/tvSeriesQueries';
 
 
-export default function DetailMovies(props) {
+export default function DetailTvSeries(props) {
 
-    const [deleteMovie] = useMutation(DELETE_MOVIE)
+    const [deleteTvSeries] = useMutation(DELETE_TVSERIES)
     const { params } = props.route
     const navigation = useNavigation()
     
-    const { data, loading, error } = useQuery(GET_MOVIE, {
+    const { data, loading, error } = useQuery(GET_TVSERIES, {
         variables: {
             id: params._id
         } 
     });
 
-    const preDeleteMovie = () => {
-        deleteMovie({
+    const preDeleteTvSeries = () => {
+        deleteTvSeries({
             variables: {
                 id: params._id
             },
             update : (cache) => {
-                const  cacheData = cache.readQuery({ query: GET_MOVIES })
-                const movies = cacheData.movies.filter(m => m._id !== params._id)
+                const  cacheData = cache.readQuery({ query: GET_ALL_TVSERIES })
+                const tvSeries = cacheData.tvSeries.filter(m => m._id !== params._id)
                 cache.writeQuery({
-                    query: GET_MOVIES,
-                    data: { movies },
+                    query: GET_ALL_TVSERIES,
+                    data: { tvSeries },
                 });
             }
         })
         .then(() => {
-            navigation.navigate('lisMovies')
+            navigation.navigate('ListTvSeries')
         })
         .catch(console.log)
     }
@@ -56,7 +56,7 @@ export default function DetailMovies(props) {
                     onPress: () => console.log('Cancel Pressed'),
                     style: 'cancel',
                 },
-                {text: 'OK', onPress: preDeleteMovie},
+                {text: 'OK', onPress: preDeleteTvSeries},
             ],
             {cancelable: false},
         );
@@ -66,7 +66,7 @@ export default function DetailMovies(props) {
     if (error) return <Text> Something error </Text>
 
     return (
-        <ImageBackground source={{uri: data.movie.poster_path}} style={{width: '100%', height: '100%'}}>
+        <ImageBackground source={{uri: data.tvSeriesById.poster_path}} style={{width: '100%', height: '100%'}}>
             <ScrollView>
             <View 
                 style={{
@@ -79,26 +79,26 @@ export default function DetailMovies(props) {
                         style={[
                                 styles.deepContainer, 
                                 {
-                                    height: data.movie.overview.length >= 300 ? null : 300
+                                    height: data.tvSeriesById.overview.length >= 300 ? null : 300
                                 }
                             ]}
                     >
-                        <Text style={styles.title}> {data.movie.title} </Text>
+                        <Text style={styles.title}> {data.tvSeriesById.title} </Text>
                         <Badge primary>
-                            <Text style={{ fontSize: 12 }}> {data.movie.tags[0].name} </Text>
+                            <Text style={{ fontSize: 12 }}> {data.tvSeriesById.tags[0].name} </Text>
                         </Badge>
                         <View>
                             <Text 
                                 style={{fontFamily: "sans-serif"}} 
                             > 
-                                Ratings: {data.movie.popularity} 
+                                Ratings: {data.tvSeriesById.popularity} 
                             </Text>
                         </View>
                         <View style={{ marginTop: 10 }}>
                             <Text 
                                 style={{ fontFamily: 'sans-serif-light' }}
                             >
-                                { data.movie.overview }
+                                { data.tvSeriesById.overview }
                             </Text>
                         </View>
                     </View>
@@ -112,7 +112,7 @@ export default function DetailMovies(props) {
                 right: 10
             }}>
                 <TouchableOpacity 
-                    onPress={() => navigation.navigate('updateMovies', { dataMovie: data.movie })}
+                    onPress={() => navigation.navigate('updateTvSeries', { dataTvSeries: data.tvSeriesById })}
                 >
                     <View
                         style={[styles.btnMenu, { marginBottom: 10 }]}

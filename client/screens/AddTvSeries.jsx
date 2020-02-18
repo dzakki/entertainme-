@@ -1,35 +1,38 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/react-hooks';
-import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
-import { UPDATE_MOVIE, GET_MOVIES } from '../store/queries/moviesQueries';
+import { ADD_TVSERIES, GET_ALL_TVSERIES } from '../store/queries/tvSeriesQueries';
 import FormCustom from '../components/FormCustom';
 
-export default function UpdateMovies (props) {
-    const { dataMovie } = props.route.params
-    const [formData, setFormData] = useState({
-        ...dataMovie,
-        tags: [dataMovie.tags[0]._id],
-        popularity: String(dataMovie.popularity),
-    })
-    const [updateMovie, { loading }]  = useMutation(UPDATE_MOVIE);
-    const navigation = useNavigation()
+export default function AddMovies() {
 
+    const [addTvSeries, { loading }]  = useMutation(ADD_TVSERIES);
+
+    const [formData, setFormData] = useState({
+        title: "", 
+        overview: "", 
+        poster_path: "", 
+        popularity: "", 
+        tags: ["5e45144184f936fed373d1ec"]
+    })
     const submitForm = () => {
         const form = {
-            title: formData.title, 
-            overview: formData.overview, 
-            poster_path: formData.poster_path,
-            popularity: Number(formData.popularity),
-            tags: formData.tags,
+            ...formData,
             popularity: Number(formData.popularity)
         }
-        updateMovie({
+        
+        console.log(form)
+        addTvSeries({
             variables: {
-                input : form,
-                id: dataMovie._id
+                input: form
             },
-            refetchQueries: [{ query: GET_MOVIES }],
+            update : (cache , { data }) => {
+                const  cacheData = cache.readQuery({ query: GET_ALL_TVSERIES })
+                cache.writeQuery({
+                    query: GET_ALL_TVSERIES,
+                    data: { tvSeries: cacheData.tvSeries.concat([data.addTvSeries]) },
+                });
+            }
         })
         .then(() => {
             setFormData({
@@ -39,15 +42,14 @@ export default function UpdateMovies (props) {
                 popularity: "", 
                 tags: ["5e45144184f936fed373d1ec"]
             })
-            alert('upated a movie')
-            navigation.navigate('detailMovies', formData)
+            alert('Added a TV series')
         })
         .catch(err => {
             console.log(err)
             alert('error')
-        })   
-    }
+        })
 
+    }
 
     return (
         <View style={styles.container}>
@@ -69,7 +71,6 @@ export default function UpdateMovies (props) {
     )
 }
 
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
     wrapForm: {
         width: '100%',
         padding: 8,
-        flex: 1,
+        flex: 1
     },
     form: {
         flex: 1,
