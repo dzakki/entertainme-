@@ -2,7 +2,7 @@ const axios = require("axios");
 const Redis = require("ioredis");
 const redis = new Redis();
 const { ApolloError } = require("apollo-server");
-const apiUrl = "http://localhost:3002";
+const apiUrl = "http://35.198.240.72:3002";
 
 const typeDefs = `
     extend type Query {
